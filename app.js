@@ -5,7 +5,8 @@ require('dotenv').config();
 const app = express();
 
 const locations = require('./routes/location');
-const database = require('./db/database')
+const database = require('./db/database');
+const weather = require('./scripts/weather');
 
 const PORT = process.env.PORT || 8080;
 
@@ -13,8 +14,8 @@ const PORT = process.env.PORT || 8080;
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-const locationRoute = express.Router()
-locations(locationRoute, database)
+const locationRoute = express.Router();
+locations(locationRoute, database, weather);
 app.use('/locations', locationRoute);
 
 app.get('/', (req, res) => {

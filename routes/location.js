@@ -3,15 +3,18 @@ module.exports = (router, database, weather) => {
   router.get('/', (req, res) => {
     database.locations()
       .then((data) => {
-        res.send(data.rows);
+        res.send(data);
       });
   });
   
   router.get('/:id', (req, res) => {
     weather.getWeather()
-    .then((response) => {
-      res.send(response.data)
-      database.addWeather(response.data)
+    .then((data) => {
+      res.send(data)
+      database.addWeather(data)
+    })
+    .catch(err => {
+      console.log(err)
     })
   });
 };

@@ -1,5 +1,5 @@
-DROP TABLE IF EXISTS locations CASCADES;
-DROP TABLE IF EXISTS weathers CASCADES;
+DROP TABLE IF EXISTS locations CASCADE;
+DROP TABLE IF EXISTS weathers CASCADE;
 
 CREATE TABLE locations (
   id SERIAL PRIMARY KEY NOT NULL,
@@ -18,5 +18,7 @@ CREATE TABLE weathers (
   humidity INTEGER,
   visibility INTEGER,
   wind_speed FLOAT,
-  wind_deg INTEGER
+  wind_deg INTEGER,
+  last_update TIMESTAMP,
+  location_id INTEGER REFERENCES locations(id)
 );

@@ -19,7 +19,7 @@ locations(locationRoute, database, weather);
 app.use('/locations', locationRoute);
 
 app.get('/', (req, res) => {
-  res.send("HELLO");
+  res.redirect("/locations");
 });
 
 

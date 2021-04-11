@@ -1,4 +1,3 @@
-
 module.exports = (router, database, weather) => {
 
   router.get('/', (req, res) => {
@@ -9,28 +8,31 @@ module.exports = (router, database, weather) => {
   });
 
   router.get('/:id', (req, res) => {
-    //Show weather of specific id page
-    database.showWeather(req.params.id)
+    database.getCity(req.params.id)
       .then(data => {
-        if (!data.length) {
-          res.send("No Past Call... Wait 20 seconds then refresh")
-        } else {
-          res.send(data)
-        }
+        const city = data.replace(/\s/, '+');
+        return weather.getWeather(city);
+      })
+      .then(data => {
+        database.addWeather(data, req.params.id);
+      })
+      .then(data => {
+        return database.showWeather(req.params.id);
+      })
+      .then(data => {
+        res.send(data);
       })
       .then(data => {
         return database.getCity(req.params.id);
       })
-      .then((data) => {
-        const city = data.replace(/\s/, '+')
-        return weather.getWeather(city);
-      })
-      .then((data) => {
+      .then(data => {
+        // Add new info after 20 seconds
         setTimeout(() => {
-          database.backup()
-          //Get Weather of ID
-          database.addWeather(data, req.params.id)
-        }, 1000);
+          return weather.getWeather(data)
+            .then(data => {
+              database.addWeather(data, req.params.id);
+            });
+        }, 20000);
       })
       .catch(err => {
         console.log(err);

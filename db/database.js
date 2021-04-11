@@ -1,5 +1,5 @@
 const { Pool } = require('pg');
-const { exec } = require('child_process')
+const { exec } = require('child_process');
 
 const pool = new Pool({
   user: process.env.DB_USER,
@@ -28,12 +28,13 @@ const getCity = (id) => {
   WHERE id = ${id};
   `)
     .then(data => {
-      return (data.rows[0].city)
-    })
-}
-exports.getCity = getCity
+      return (data.rows[0].city);
+    });
+};
+exports.getCity = getCity;
 
 const addWeather = (data, id) => {
+  backup();
   return pool.query(`
   INSERT INTO weathers (lon, lat, temp, feels_like, temp_min, temp_max, pressure, humidity, visibility, wind_speed, wind_deg, last_update, location_id)
   VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, NOW(), $12);
@@ -59,21 +60,7 @@ const showWeather = (id) => {
 };
 exports.showWeather = showWeather;
 
-const deleteWeather = (id) => {
-  return pool.query(`
-  DELETE FROM weathers
-  WHERE location_id = $1;
-  `, [id])
-    .then(res => {
-      return res.rows;
-    })
-    .catch(err => {
-      console.log(err);
-    })
-};
-exports.deleteWeather = deleteWeather;
-
 const backup = () => {
-  exec(`pg_dump -p ${process.env.DB_PORT} -d ${process.env.DB} > db_backup.sql`)
-}
+  exec(`pg_dump -p ${process.env.DB_PORT} -d ${process.env.DB} > db_backup.sql`);
+};
 exports.backup = backup;

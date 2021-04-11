@@ -7,16 +7,16 @@ const myFormat = printf(({ level, message, timestamp }) => {
 
 const logConfig = {
   format: combine(
-   timestamp( {format: 'YYYY-MM-DD HH:mm:ss ZZ'}),
-   myFormat,
-   prettyPrint()
+    timestamp({format: 'YYYY-MM-DD HH:mm:ss ZZ'}),
+    myFormat,
+    prettyPrint()
   ),
   transports: [
     new transports.File({
       filename: './logs/combined.log'
     })
   ]
-}
+};
 
 const log = createLogger(logConfig);
 
@@ -37,7 +37,7 @@ module.exports = (router, database, weather) => {
       })
       .then(data => {
         database.addWeather(data, req.params.id);
-        log.info('API ran')
+        log.info('API ran');
       })
       .then(data => {
         return database.showWeather(req.params.id);
@@ -54,12 +54,13 @@ module.exports = (router, database, weather) => {
           return weather.getWeather(data)
             .then(data => {
               database.addWeather(data, req.params.id);
-              log.info('API ran')
+              log.info('API ran');
             });
         }, 20000);
       })
       .catch(err => {
         log.error(err);
+        res.status(404).send("ERROR 404 - NOT FOUND");
       });
   });
 };

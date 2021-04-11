@@ -18,6 +18,10 @@ const locationRoute = express.Router();
 locations(locationRoute, database, weather);
 app.use('/locations', locationRoute);
 
+app.get('/:id', (req, res) => {
+  res.redirect("/locations");
+});
+
 app.get('/', (req, res) => {
   res.redirect("/locations");
 });
